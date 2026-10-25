@@ -1,59 +1,36 @@
 import "../css/TopBar.css";
-export default function TopBar({setShowReport, onClearAll}) {
 
-    const handleClearAll = () => {
-        if (window.confirm("Are you sure you want to clear all logged pain data?")) {
-            onClearAll();
-        }
-    };
+const STEPS = ["Describe", "Mark where it hurts", "Get your report"];
 
+export default function TopBar({ onOpenReport, onGoHome, savedCount = 0 }) {
     return (
-
         <header className="top-bar">
+            <button
+                type="button"
+                className="logo"
+                onClick={onGoHome}
+                aria-label="Go to home page"
+            >
+                <span className="logo-text">Anatome</span>
+            </button>
 
-            <div className="logo">
-
-                <div className="logo-icon" aria-hidden="true" />
-
-
-                <div>
-
-                    <div className="logo-text">
-                        ANATOME
-                    </div>
-
-                    <div className="logo-tag">
-                        Pain Communication Tool
-                    </div>
-
-                </div>
-
-            </div>
-
+            <ol className="top-steps" aria-label="Progress">
+                {STEPS.map((step, index) => {
+                    const state = index === 0 ? "done" : index === 1 ? "current" : "todo";
+                    return (
+                        <li key={step} className={`top-step is-${state}`} aria-current={state === "current" ? "step" : undefined}>
+                            <span className="top-step__dot" aria-hidden="true">{state === "done" ? "✓" : index + 1}</span>
+                            <span className="top-step__label">{step}</span>
+                        </li>
+                    );
+                })}
+            </ol>
 
             <div className="top-bar-actions">
-
-
-                <button 
-                    className="btn btn-secondary btn-sm"
-                    onClick={handleClearAll}
-                >
-                    Clear all
+                <button className="btn btn-primary" onClick={onOpenReport} disabled={savedCount === 0} title={savedCount === 0 ? "Save at least one spot first" : undefined}>
+                    Make report{savedCount > 0 ? ` (${savedCount})` : ""}
                 </button>
-
-
-                <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => setShowReport(true)}
-                >
-                    Generate report
-                </button>
-
-
             </div>
-
-
         </header>
-
     );
 }
