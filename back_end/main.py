@@ -1,33 +1,31 @@
-from typing import Any
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 import datetime
 import os
+from typing import Any
 
-from fastapi import FastAPI, Depends, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 from sqlalchemy import inspect, text
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
 
 import models
-from database import Base, engine, get_db
-from ai_report_service import generate_ai_report, GROQ_REPORT_MODEL, MissingReportApiKey
-from gemini_service import revise_transcript
+from ai_report_service import GROQ_REPORT_MODEL, MissingReportApiKey, generate_ai_report
 from care_guide import generate_care_guide
+from database import Base, engine, get_db
+from gemini_service import revise_transcript
 from ml import inference
 
-
-app = FastAPI(
-    title="ANATOME API",
-    version="2.0.0",
-)
-
+app = FastAPI(title="ANATOME API", version="2.0.0")
 
 Base.metadata.create_all(bind=engine)
 
 
 def add_missing_columns():
-    # create_all() never alters existing tables; add columns introduced
-    # after a database was first created.
+    # create_all() won't touch a table that already exists, so older
+    # databases need the newer columns added by hand.
     with engine.begin() as conn:
         columns = {c["name"] for c in inspect(conn).get_columns("patient_reports")}
         if "analysis" not in columns:
@@ -36,16 +34,9 @@ def add_missing_columns():
 
 add_missing_columns()
 
-
-origins = [
-    "http://localhost:5173",
-    "http://localhost",
-]
-
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["http://localhost:5173", "http://localhost"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -54,16 +45,13 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {
-        "message": "ANATOME API is running",
-    }
+    return {"message": "ANATOME API is running"}
 
 
 @app.get("/api/health")
 def health_check():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT 1"))
-        row = result.fetchone()
+        row = conn.execute(text("SELECT 1")).fetchone()
 
     return {
         "status": "healthy",
@@ -75,9 +63,7 @@ def health_check():
     }
 
 
-# --------------------------------------------------------------------------
-# Decision-support models
-# --------------------------------------------------------------------------
+# ---- decision support ----
 
 class AnalyzeRequest(BaseModel):
     age: int | None = Field(default=None, ge=0, le=120)
@@ -104,8 +90,7 @@ class CareGuideRequest(BaseModel):
 
 @app.post("/api/care-guide")
 def care_guide(request: CareGuideRequest):
-    """Patient-facing tips for while they wait to be seen, plus the analysis
-    the tips were selected from."""
+    """Tips the patient can read while waiting, plus the analysis behind them."""
     payload = request.model_dump()
     if not payload["pain_regions"]:
         raise HTTPException(status_code=400, detail="Mark and save at least one pain spot first.")
@@ -128,8 +113,8 @@ def model_cards():
 
 @app.post("/api/transcribe")
 async def transcribe(audio: UploadFile = File(...), translate: bool = Form(False)):
-    """Speech to text with Whisper on Groq. ``translate`` turns any spoken
-    language into English text so PainBERT can read it."""
+    """Whisper (on Groq) speech-to-text. translate=True gives English output
+    for any spoken language, since PainBERT only reads English."""
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
         raise HTTPException(status_code=503, detail="GROQ_API_KEY is not configured on the server.")
@@ -158,24 +143,19 @@ class ReviseRequest(BaseModel):
 @app.post("/api/revise-transcript")
 def revise_patient_transcript(request: ReviseRequest):
     text = request.text.strip()
-
     if not text:
         raise HTTPException(status_code=400, detail="There is no text to revise.")
-
     if len(text) > 10000:
         raise HTTPException(status_code=400, detail="The description is too long to revise.")
 
     try:
         revised = revise_transcript(text)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
     return {"revised": revised}
 
 
-# --------------------------------------------------------------------------
-# Reports
-# --------------------------------------------------------------------------
+# ---- reports ----
 
 class ReportRequest(BaseModel):
     patient_name: str
@@ -188,8 +168,8 @@ class ReportRequest(BaseModel):
 
 
 def report_regions(pain_regions: dict, analysis: dict) -> dict:
-    """Spots as the report writer sees them: plain fields, no 3D coordinates,
-    and for body-area spots the structures the localizer found under the spot."""
+    """Flatten the spots for the report LLM (drop the 3D coords). Body-area
+    spots also get the structures the localizer found under them."""
     out = {}
     for spot_id, spot in pain_regions.items():
         loc = (analysis.get("localization") or {}).get(spot_id)
@@ -209,7 +189,7 @@ def report_regions(pain_regions: dict, analysis: dict) -> dict:
 
 
 def decision_support_summary(analysis: dict) -> dict:
-    """The subset of model output the report writer may reference."""
+    """Only the bits of the analysis the report LLM is allowed to mention."""
     triage = analysis.get("triage") or {}
     return {
         "care_level": (analysis.get("care_level") or {}).get("title"),
@@ -244,8 +224,8 @@ def create_report(request: ReportRequest, db: Session = Depends(get_db)):
     except MissingReportApiKey as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Exception as exc:
-        # Provider errors can contain request details. Never return them to
-        # the browser, which may be shared during a patient intake session.
+        # don't send the provider's error to the browser, it can include
+        # request details and the screen might be shared during intake
         raise HTTPException(
             status_code=502,
             detail="The AI report service is unavailable. Please try again later.",
@@ -278,9 +258,4 @@ def create_report(request: ReportRequest, db: Session = Depends(get_db)):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-    )
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

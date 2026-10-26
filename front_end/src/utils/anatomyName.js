@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 // The Z-Anatomy GLB swaps these two labels relative to the meshes' positions
 // (see MODEL_LABEL_FIXES in back_end/ml/anatomy.py). Display only.
 const MODEL_LABEL_FIXES = {

@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Train the ANATOME triage-acuity and admission models on CDC NHAMCS data.
 
 Data: National Hospital Ambulatory Medical Care Survey (NHAMCS), emergency
@@ -67,9 +70,7 @@ RACE = {1: "Non-Hispanic White", 2: "Non-Hispanic Black", 3: "Hispanic", 4: "Non
 RNG = np.random.default_rng(42)
 
 
-# --------------------------------------------------------------------------
-# Data
-# --------------------------------------------------------------------------
+# ---- Data ----
 
 def load_year(path: Path) -> pd.DataFrame:
     reader = pd.io.stata.StataReader(path)
@@ -104,9 +105,7 @@ def build_dataset() -> pd.DataFrame:
     return df
 
 
-# --------------------------------------------------------------------------
-# Metrics
-# --------------------------------------------------------------------------
+# ---- Metrics ----
 
 def expected_calibration_error(y: np.ndarray, p: np.ndarray, w: np.ndarray, bins: int = 10) -> float:
     edges = np.linspace(0, 1, bins + 1)
@@ -153,9 +152,7 @@ def multiclass_report(y, proba, w) -> dict:
     }
 
 
-# --------------------------------------------------------------------------
-# Models
-# --------------------------------------------------------------------------
+# ---- Models ----
 
 def augment_missing_sex(X: pd.DataFrame) -> pd.DataFrame:
     # Sex is optional in the ANATOME intake. Masking it for a slice of the
@@ -309,9 +306,7 @@ def train_admission(train, valid, test) -> tuple[dict, dict]:
     return {"model": model}, card
 
 
-# --------------------------------------------------------------------------
-# Population reference table ("visits like yours")
-# --------------------------------------------------------------------------
+# ---- Population reference table ("visits like yours") ----
 
 def weighted_median(values: np.ndarray, weights: np.ndarray) -> float | None:
     mask = values >= 0

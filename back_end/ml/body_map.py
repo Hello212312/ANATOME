@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Simple body areas and the structure localizer.
 
 Patients think in body areas ("my stomach", "my lower back"), not in
@@ -113,9 +116,7 @@ def area_at(name: str, point) -> tuple[str, str]:
     return area, side
 
 
-# --------------------------------------------------------------------------
-# Build step: GLB -> artifacts/body_map.json + front_end/src/data/bodyAreas.json
-# --------------------------------------------------------------------------
+# ---- Build step: GLB -> artifacts/body_map.json + front_end/src/data/bodyAreas.json ----
 
 def _trs_matrix(node: dict) -> np.ndarray:
     if "matrix" in node:
@@ -224,9 +225,7 @@ def body_map() -> dict | None:
     return data
 
 
-# --------------------------------------------------------------------------
-# Localizer
-# --------------------------------------------------------------------------
+# ---- Localizer ----
 
 # Patient words -> which tissue types they make more likely. Multipliers.
 TISSUE_PRIORS = {

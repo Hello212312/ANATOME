@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 

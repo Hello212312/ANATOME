@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 import { useState } from "react";
 import "./Questionnaire.css";
 
@@ -200,8 +203,6 @@ export default function Questionnaire({ onFinish }) {
         </p>
 
         <h1>{question.question}</h1>
-
-        {/* Everything else stays exactly the same */}
 
         {question.type === "radio" &&
           question.options.map((option) => (

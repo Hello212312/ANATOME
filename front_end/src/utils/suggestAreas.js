@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 // Body areas the patient mentioned in their description, so the body map can
 // suggest where to tap. Plain word lists: every suggestion can show the words
 // it came from. Sides come from "left"/"right"/"both" in the same clause.

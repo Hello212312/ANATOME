@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 // Patient-facing "while you wait" panel. The tips are chosen on the server
 // from a vetted list (back_end/care_guide.py); a language model only
 // rewords them, and anything it adds is filtered out before it gets here.

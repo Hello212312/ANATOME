@@ -1,8 +1,12 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 import datetime
 import uuid
 
 from sqlalchemy import Column, Integer, String, Date, JSON, DateTime
 from database import Base
+
 
 class PatientReport(Base):
     __tablename__ = "patient_reports"

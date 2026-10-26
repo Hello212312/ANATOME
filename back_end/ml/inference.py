@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Runtime for all ANATOME models.
 
 Loads each trained artifact once and exposes ``analyze_intake`` (the full
@@ -34,9 +37,7 @@ HISTORY_OPTIONS = {
 }
 
 
-# --------------------------------------------------------------------------
-# PainBERT
-# --------------------------------------------------------------------------
+# ---- PainBERT ----
 
 class PainBERTRuntime:
     def __init__(self, directory: Path):
@@ -111,9 +112,7 @@ def dn4_summary(keys: set[str]) -> dict:
     }
 
 
-# --------------------------------------------------------------------------
-# Triage-GBM
-# --------------------------------------------------------------------------
+# ---- Triage-GBM ----
 
 class TriageRuntime:
     def __init__(self, path: Path, population_path: Path):
@@ -220,9 +219,7 @@ def _feature_label(feature: str, value) -> str:
     return CONCEPT_NAMES.get(feature, feature)
 
 
-# --------------------------------------------------------------------------
-# Loading
-# --------------------------------------------------------------------------
+# ---- Loading ----
 
 @lru_cache(maxsize=1)
 def painbert() -> PainBERTRuntime | None:
@@ -253,9 +250,7 @@ def tag_text(text: str) -> dict | None:
     return runtime.tag(text) if runtime else None
 
 
-# --------------------------------------------------------------------------
-# Full pipeline
-# --------------------------------------------------------------------------
+# ---- Full pipeline ----
 
 CARE_LEVELS = {
     "emergency": ("Emergency care now", "Call 911 or go to the nearest emergency department."),

@@ -25,6 +25,16 @@ The API also exposes them directly (`POST /api/analyze`, `POST /api/nlp/tag`,
 fairness audit are in [`back_end/ml/README.md`](back_end/ml/README.md) and the
 model-card JSON files in `back_end/ml/artifacts/`.
 
+## Authors
+
+Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+
+## AI use
+
+Most of the code in this repository was generated with an AI coding assistant
+(Claude, by Anthropic) and then reviewed, tested and edited by the authors.
+Every source file has a short header saying so.
+
 # Setup Guide
 This guide will walk you through setting up and running the project from start to finish.
 

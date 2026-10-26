@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """ANATOME anatomical knowledge graph.
 
 Turns the Z-Anatomy structure names in the 3D model (for example

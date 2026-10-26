@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 import { useMemo, useState, useRef } from "react";
 
 import TopBar from "./components/TopBar";

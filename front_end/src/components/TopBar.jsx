@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 import "../css/TopBar.css";
 
 const STEPS = ["Describe", "Mark where it hurts", "Get your report"];

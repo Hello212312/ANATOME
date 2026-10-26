@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Systematic sweeps on top of the hand-written scenarios.
 
 1. Localizer sweep: a simulated tap on every visible structure in the model

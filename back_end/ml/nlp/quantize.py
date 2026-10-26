@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Dynamic int8 quantization of PainBERT, with an accuracy check.
 
 Shrinks the ONNX model about 4x (small enough for GitHub and a cheap server)

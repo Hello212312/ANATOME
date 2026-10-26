@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Shared clinical concept vocabulary.
 
 The triage model is trained on CDC NHAMCS emergency-department visits, where

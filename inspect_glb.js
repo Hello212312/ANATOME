@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 const fs = require('fs');
 const filePath = 'front_end/public/models/zanatomy1.glb';
 const buffer = fs.readFileSync(filePath);

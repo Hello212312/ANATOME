@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 // Everyday body areas ("Stomach / belly") over the model's 659 structures.
 // bodyAreas.json is generated from the GLB by back_end/ml/body_map.py so the
 // browser and the localizer agree on which structure belongs to which area.

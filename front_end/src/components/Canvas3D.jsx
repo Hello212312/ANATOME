@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 import "../css/Canvas3D.css";
 import "@google/model-viewer";
 
@@ -17,18 +20,16 @@ export default function Canvas3D({
   const originalColors = useRef({});
   const hoveredMaterial = useRef(null);
 
-  // Synchronize materials with painData
+  // recolor the materials whenever painData changes
   useEffect(() => {
     try {
       if (viewerRef.current && viewerRef.current.model) {
         const materials = viewerRef.current.model.materials;
         for (const material of materials) {
           try {
-            // Accessing pbrMetallicRoughness can throw if the material isn't fully loaded by model-viewer
+            // pbrMetallicRoughness throws if model-viewer hasn't loaded the material yet
             const pbr = material.pbrMetallicRoughness;
             if (!pbr) continue;
-
-            // (Removed force-hide logic for Fascia/Cartilage because we want to see the dark red/gray colors)
 
             if (!originalColors.current[material.name]) {
               originalColors.current[material.name] =
@@ -37,7 +38,6 @@ export default function Canvas3D({
 
             let targetColor = originalColors.current[material.name];
 
-            // Find the max severity for this specific muscle
             let maxSeverity = 0;
             let hasPain = false;
             for (const spot of Object.values(painData)) {
@@ -48,15 +48,15 @@ export default function Canvas3D({
             }
 
             if (hasPain) {
-              targetColor = [1, 0.2, 0.2, 1]; // Default Red
+              targetColor = [1, 0.2, 0.2, 1]; // red
               if (maxSeverity <= 3)
-                targetColor = [0.3, 0.8, 0.3, 1]; // Green
-              else if (maxSeverity <= 6) targetColor = [1, 0.6, 0, 1]; // Orange
+                targetColor = [0.3, 0.8, 0.3, 1]; // green
+              else if (maxSeverity <= 6) targetColor = [1, 0.6, 0, 1]; // orange
             } else if (hoveredMaterial.current === material.name) {
-              targetColor = [0.3, 0.6, 1.0, 1]; // Hover glow
+              targetColor = [0.3, 0.6, 1.0, 1]; // hover
             }
 
-            // ONLY update WebGL if the color actually changed (prevents browser freezing)
+            // only touch WebGL when the color really changed, otherwise the browser freezes
             const currentColor = pbr.baseColorFactor;
             if (
               !currentColor ||
@@ -67,8 +67,8 @@ export default function Canvas3D({
             ) {
               pbr.setBaseColorFactor(targetColor);
             }
-          } catch (e) {
-            // Silently skip materials that haven't finished lazy-loading in WebGL yet
+          } catch {
+            // material still lazy-loading, skip it for now
             continue;
           }
         }
@@ -127,7 +127,7 @@ export default function Canvas3D({
       return;
     }
 
-    // Hover logic
+    // hover highlight
     if (!panMode && viewerRef.current && viewerRef.current.model) {
       const material = viewerRef.current.materialFromPoint(
         e.clientX,
@@ -135,13 +135,11 @@ export default function Canvas3D({
       );
       let newHover = material ? material.name : null;
 
-      // (Removed hover-blocking for Fascia/Cartilage so the user can click them if they want)
-
       if (newHover !== hoveredMaterial.current) {
         const oldHover = hoveredMaterial.current;
         hoveredMaterial.current = newHover;
 
-        // Revert old hover if it's not currently tracked in painData
+        // un-highlight the old one (unless it has pain marked on it)
         if (
           oldHover &&
           !Object.values(painData).some((spot) => spot.regionName === oldHover)
@@ -154,11 +152,11 @@ export default function Canvas3D({
               oldMat.pbrMetallicRoughness.setBaseColorFactor(
                 originalColors.current[oldHover],
               );
-            } catch (e) {}
+            } catch {}
           }
         }
 
-        // Apply new hover if it's not currently tracked in painData
+        // highlight the new one (unless it has pain marked on it)
         if (
           newHover &&
           !Object.values(painData).some((spot) => spot.regionName === newHover)
@@ -172,11 +170,10 @@ export default function Canvas3D({
                 originalColors.current[newHover] =
                   newMat.pbrMetallicRoughness.baseColorFactor.slice();
               }
-              // Highlight with a light blue glow
               newMat.pbrMetallicRoughness.setBaseColorFactor([
                 0.3, 0.6, 1.0, 1,
               ]);
-            } catch (e) {}
+            } catch {}
           }
         }
       }

@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 import { useEffect, useRef, useState } from "react";
 import "../css/ReportModal.css";
 import ReportButton from "./ReportButton";

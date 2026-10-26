@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 export const EMPTY_VALUES = { severity: null, painType: "", frequency: "", onset: "", notes: "" };
 
 export function validateSpot(values) {

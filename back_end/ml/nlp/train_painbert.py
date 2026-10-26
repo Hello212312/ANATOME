@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Fine-tune PainBERT: a multi-label pain-descriptor tagger for patient notes.
 
 Backbone: BAAI/bge-small-en-v1.5 (33M-parameter BERT encoder), mean-pooled,

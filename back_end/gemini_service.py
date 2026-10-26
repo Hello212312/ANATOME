@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 import os
 import time
 from pathlib import Path
@@ -8,18 +11,10 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).with_name(".env"))
 
-
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-GEMINI_MODEL = os.getenv(
-    "GEMINI_MODEL",
-    "gemini-flash-latest",
-)
-
-GEMINI_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "{model}:generateContent"
-)
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
 
 REVISE_INSTRUCTIONS = """
@@ -46,9 +41,8 @@ Rules:
 """
 
 
-# Tried in order when a model is overloaded or rate limited.
+# if the main model is overloaded / rate limited we try these next
 FALLBACK_MODELS = ["gemini-flash-lite-latest", "gemini-2.5-flash"]
-
 RETRYABLE_STATUS_CODES = {429, 500, 503}
 
 
@@ -58,30 +52,21 @@ def revise_transcript(text: str) -> str:
 
     models = [GEMINI_MODEL] + [m for m in FALLBACK_MODELS if m != GEMINI_MODEL]
 
-    for attempt, model in enumerate(models):
-        if attempt:
+    for i, model in enumerate(models):
+        if i > 0:
             time.sleep(1)
-
         response = _request_revision(model, text)
-
         if response.status_code not in RETRYABLE_STATUS_CODES:
             break
 
     if response.status_code in RETRYABLE_STATUS_CODES:
-        raise RuntimeError(
-            "The AI service is busy right now. Please try again in a moment."
-        )
-
+        raise RuntimeError("The AI service is busy right now. Please try again in a moment.")
     if response.status_code != 200:
-        raise RuntimeError(
-            f"Gemini request failed ({response.status_code}): "
-            f"{response.text[:300]}"
-        )
+        raise RuntimeError(f"Gemini request failed ({response.status_code}): {response.text[:300]}")
 
     candidates = response.json().get("candidates") or []
     parts = (candidates[0].get("content") or {}).get("parts", []) if candidates else []
     revised = "".join(part.get("text", "") for part in parts).strip()
-
     if not revised:
         raise RuntimeError("Gemini did not return any revised text.")
 
@@ -93,18 +78,9 @@ def _request_revision(model: str, text: str) -> httpx.Response:
         GEMINI_URL.format(model=model),
         headers={"x-goog-api-key": GEMINI_API_KEY},
         json={
-            "systemInstruction": {
-                "parts": [{"text": REVISE_INSTRUCTIONS}],
-            },
-            "contents": [
-                {
-                    "role": "user",
-                    "parts": [{"text": text}],
-                },
-            ],
-            "generationConfig": {
-                "temperature": 0.2,
-            },
+            "systemInstruction": {"parts": [{"text": REVISE_INSTRUCTIONS}]},
+            "contents": [{"role": "user", "parts": [{"text": text}]}],
+            "generationConfig": {"temperature": 0.2},
         },
         timeout=60,
     )

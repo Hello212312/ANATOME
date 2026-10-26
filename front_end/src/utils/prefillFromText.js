@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 // Pre-answers a new spot's questions from what the patient already said in
 // the intake ("started 3 days ago", "comes and goes", "sharp"). Every
 // prefilled answer is shown as such in the form and can be changed.

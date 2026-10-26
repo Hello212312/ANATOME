@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Pain scenarios for checking that ANATOME's outputs make sense.
 
 Each scenario is a patient: what they said, where they tapped, how they
@@ -289,9 +292,7 @@ SCENARIOS: list[Scenario] = [
 ]
 
 
-# --------------------------------------------------------------------------
-# Tap simulation
-# --------------------------------------------------------------------------
+# ---- Tap simulation ----
 
 def _visible_samples(data):
     pts, owners = [], []
@@ -368,9 +369,7 @@ def build_payload(sc: Scenario, jitter: float = 0.0, rng=None):
     return {"age": sc.age, "questionnaire": {"patient_description": sc.description}, "pain_regions": regions}, taps
 
 
-# --------------------------------------------------------------------------
-# Checks
-# --------------------------------------------------------------------------
+# ---- Checks ----
 
 def check(sc: Scenario, payload, taps, analysis, selection) -> list[str]:
     problems = []

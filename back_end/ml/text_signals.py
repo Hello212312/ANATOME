@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Symptoms, onset and trend read from the patient's own description.
 
 The intake is now a spoken or typed description instead of a checkbox
@@ -86,9 +89,7 @@ def sudden_onset(text: str) -> bool:
     return bool(SUDDEN.search((text or "").lower()))
 
 
-# --------------------------------------------------------------------------
-# PainBERT corroboration gate
-# --------------------------------------------------------------------------
+# ---- PainBERT corroboration gate ----
 # PainBERT was trained on generated notes. On real descriptions it sometimes
 # fires on unrelated words (scenario tests: "trauma" 0.83 for "moved to the
 # lower right", "tingling" 0.72 for "fainted", "bladder_bowel" 0.38 for

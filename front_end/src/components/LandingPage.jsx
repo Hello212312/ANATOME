@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 import { motion } from "framer-motion";
 import AnatomyHero from "./AnatomyHero";
 import "./LandingPage.css";
@@ -35,12 +38,7 @@ const REPORT_SECTIONS = [
   "Clinician notes",
 ];
 
-const TEAM = [
-  { name: "Pranav Arun Pillai", role: "UI/UX design, lead research, project coordination" },
-  { name: "Arush Banerjee", role: "Team lead, front-end lead, 3D anatomy" },
-  { name: "Kyle Hwang", role: "Lead software engineer, AI model development" },
-  { name: "Mustafa Ali", role: "AI model development" },
-];
+const TEAM = ["Sidharth Mantri", "Pranav Arun Pillai", "Rishi Tadi"];
 
 function Waveform() {
   const bars = [4, 9, 14, 7, 18, 11, 22, 16, 8, 13, 20, 10, 6, 15, 9, 5, 12, 17, 7, 4];
@@ -269,10 +267,9 @@ export default function LandingPage({ onBegin }) {
           <h2>Built by</h2>
         </motion.header>
         <motion.ul className="lp-team__list" {...reveal}>
-          {TEAM.map((member) => (
-            <li key={member.name}>
-              <span className="lp-team__name">{member.name}</span>
-              <span className="lp-team__role">{member.role}</span>
+          {TEAM.map((name) => (
+            <li key={name}>
+              <span className="lp-team__name">{name}</span>
             </li>
           ))}
         </motion.ul>

@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Generate a labelled corpus of patient pain descriptions with an LLM.
 
 This is "specification-first" synthetic data: the label set for every

@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Patient-facing "while you wait" guidance.
 
 Two stages, so the language model never decides what is safe:
@@ -221,9 +224,7 @@ def rule_guide(selection: dict, analysis: dict) -> dict:
     }
 
 
-# --------------------------------------------------------------------------
-# LLM personalisation + validation
-# --------------------------------------------------------------------------
+# ---- LLM personalisation + validation ----
 
 GUIDE_SCHEMA = {
     "type": "object",

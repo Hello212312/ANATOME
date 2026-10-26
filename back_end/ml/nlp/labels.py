@@ -1,3 +1,6 @@
+# ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+# Note: this code was generated with AI assistance (Claude). See README.
+
 """Label taxonomy for the ANATOME pain-language model (PainBERT).
 
 Each label is a clinically recognised descriptor that a clinician would want

@@ -1,3 +1,6 @@
+// ANATOME - Sidharth Mantri, Pranav Arun Pillai, Rishi Tadi
+// Note: this code was generated with AI assistance (Claude). See README.
+
 import jsPDF from "jspdf";
 
 export default function ReportButton({
@@ -10,9 +13,7 @@ export default function ReportButton({
 }) {
   const generatePDF = async () => {
     try {
-      // ==========================================
-      // Generate and save the report through FastAPI
-      // ==========================================
+      // ---- Generate and save the report through FastAPI ----
 
       if (!saveReport) {
         throw new Error("The report-saving function is unavailable.");
@@ -35,9 +36,7 @@ export default function ReportButton({
         throw new Error("The server did not return an AI-generated report.");
       }
 
-      // ==========================================
-      // PDF setup
-      // ==========================================
+      // ---- PDF setup ----
 
       const doc = new jsPDF({
         orientation: "portrait",
@@ -52,9 +51,7 @@ export default function ReportButton({
       // Leave room for the footer at the bottom.
       const bottomMargin = 275;
 
-      // ==========================================
-      // PDF helper functions
-      // ==========================================
+      // ---- PDF helper functions ----
 
       function ensureSpace(requiredHeight = 12) {
         if (y + requiredHeight > bottomMargin) {
@@ -167,9 +164,7 @@ export default function ReportButton({
         y += 8;
       }
 
-      // ==========================================
-      // Header
-      // ==========================================
+      // ---- Header ----
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(20);
@@ -194,9 +189,7 @@ export default function ReportButton({
 
       y += 15;
 
-      // ==========================================
-      // 1. Patient Information
-      // ==========================================
+      // ---- 1. Patient Information ----
 
       addSectionHeading("1. Patient Information");
 
@@ -213,15 +206,11 @@ export default function ReportButton({
 
       addLabelledText("Report date", today);
 
-      // ==========================================
-      // 2. Pain Assessment
-      // ==========================================
+      // ---- 2. Pain Assessment ----
 
       addSectionHeading("2. Pain Assessment");
 
-      // ==========================================
-      // Capture the Three.js canvas snapshot
-      // ==========================================
+      // ---- Capture the Three.js canvas snapshot ----
 
       try {
         // The Three.js renderer draws into a <canvas> inside .anatomy-stage__canvas
@@ -252,9 +241,7 @@ export default function ReportButton({
         addWrappedText("The 3D pain-location image could not be captured.");
       }
 
-      // ==========================================
-      // Raw pain-region information
-      // ==========================================
+      // ---- Raw pain-region information ----
 
       addSubheading("Reported Pain Regions");
 
@@ -290,9 +277,7 @@ export default function ReportButton({
         });
       }
 
-      // ==========================================
-      // 3. AI Documentation Summary
-      // ==========================================
+      // ---- 3. AI Documentation Summary ----
 
       addSectionHeading("3. Patient-Reported Clinical Summary");
 
@@ -312,9 +297,7 @@ export default function ReportButton({
 
       addWrappedText(aiReport.associated_symptoms_summary);
 
-      // ==========================================
-      // 4. Aggravating and relieving factors
-      // ==========================================
+      // ---- 4. Aggravating and relieving factors ----
 
       addSectionHeading("4. Aggravating and Relieving Factors");
 
@@ -326,9 +309,7 @@ export default function ReportButton({
 
       addBulletList(aiReport.relieving_factors);
 
-      // ==========================================
-      // 5. Region-specific AI summaries
-      // ==========================================
+      // ---- 5. Region-specific AI summaries ----
 
       addSectionHeading("5. Region-Specific Documentation");
 
@@ -368,25 +349,19 @@ export default function ReportButton({
         });
       }
 
-      // ==========================================
-      // 6. Clinician review items
-      // ==========================================
+      // ---- 6. Clinician review items ----
 
       addSectionHeading("6. Items for Clinician Review");
 
       addBulletList(aiReport.clinician_review_items);
 
-      // ==========================================
-      // 7. Documentation statement
-      // ==========================================
+      // ---- 7. Documentation statement ----
 
       addSectionHeading("7. Documentation Statement");
 
       addWrappedText(aiReport.documentation_statement);
 
-      // ==========================================
-      // 8. Blank clinician notes section
-      // ==========================================
+      // ---- 8. Blank clinician notes section ----
 
       addSectionHeading("8. Clinician Notes");
 
@@ -404,9 +379,7 @@ export default function ReportButton({
 
       y += 45;
 
-      // ==========================================
-      // Footer on every page
-      // ==========================================
+      // ---- Footer on every page ----
 
       const totalPages = doc.getNumberOfPages();
 
@@ -425,9 +398,7 @@ export default function ReportButton({
         });
       }
 
-      // ==========================================
-      // Download PDF
-      // ==========================================
+      // ---- Download PDF ----
 
       const safePatientName =
         patientName?.trim().replace(/[^a-zA-Z0-9_-]/g, "_") || "Patient";
