@@ -124,7 +124,7 @@ async def transcribe(audio: UploadFile = File(...), translate: bool = Form(False
 
     from openai import OpenAI
 
-    client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key, timeout=60.0)
+    client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key, timeout=22.0, max_retries=0)
     upload = (audio.filename or "speech.webm", data, audio.content_type or "audio/webm")
     try:
         if translate:

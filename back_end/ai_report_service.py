@@ -153,7 +153,7 @@ def generate_ai_report(
     if not api_key:
         raise MissingReportApiKey("GROQ_API_KEY is not configured on the server.")
 
-    client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key, timeout=30.0)
+    client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key, timeout=22.0, max_retries=0)
 
     source_data = {
         "patient_age": patient_age,

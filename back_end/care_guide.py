@@ -334,7 +334,7 @@ def generate_care_guide(analysis: dict, payload: dict) -> dict:
     approved = {"headline": fallback["headline"], "do_now": fallback["do_now"], "avoid": fallback["avoid"],
                 "track": fallback["track"], "go_now_if": fallback["go_now_if"], "ask_doctor": fallback["ask_doctor"]}
     try:
-        client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key, timeout=25.0)
+        client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key, timeout=15.0, max_retries=0)
         completion = client.chat.completions.create(
             model=CARE_MODEL,
             messages=[

@@ -45,21 +45,34 @@ Rules:
 FALLBACK_MODELS = ["gemini-flash-lite-latest", "gemini-2.5-flash"]
 RETRYABLE_STATUS_CODES = {429, 500, 503}
 
+# the Netlify proxy gives up after ~26s, so a stalled model must not eat the
+# whole request. each attempt gets a short timeout and we stop retrying
+# once the overall budget is spent
+ATTEMPT_TIMEOUT = 10
+TOTAL_BUDGET = 22
+
 
 def revise_transcript(text: str) -> str:
     if not GEMINI_API_KEY:
         raise RuntimeError("GEMINI_API_KEY is not configured.")
 
     models = [GEMINI_MODEL] + [m for m in FALLBACK_MODELS if m != GEMINI_MODEL]
+    deadline = time.monotonic() + TOTAL_BUDGET
+    response = None
 
-    for i, model in enumerate(models):
-        if i > 0:
-            time.sleep(1)
-        response = _request_revision(model, text)
+    for model in models:
+        remaining = deadline - time.monotonic()
+        if remaining < 2:
+            break
+        try:
+            response = _request_revision(model, text, min(ATTEMPT_TIMEOUT, remaining))
+        except httpx.TimeoutException:
+            response = None
+            continue
         if response.status_code not in RETRYABLE_STATUS_CODES:
             break
 
-    if response.status_code in RETRYABLE_STATUS_CODES:
+    if response is None or response.status_code in RETRYABLE_STATUS_CODES:
         raise RuntimeError("The AI service is busy right now. Please try again in a moment.")
     if response.status_code != 200:
         raise RuntimeError(f"Gemini request failed ({response.status_code}): {response.text[:300]}")
@@ -73,7 +86,7 @@ def revise_transcript(text: str) -> str:
     return revised
 
 
-def _request_revision(model: str, text: str) -> httpx.Response:
+def _request_revision(model: str, text: str, timeout: float) -> httpx.Response:
     return httpx.post(
         GEMINI_URL.format(model=model),
         headers={"x-goog-api-key": GEMINI_API_KEY},
@@ -82,5 +95,5 @@ def _request_revision(model: str, text: str) -> httpx.Response:
             "contents": [{"role": "user", "parts": [{"text": text}]}],
             "generationConfig": {"temperature": 0.2},
         },
-        timeout=60,
+        timeout=timeout,
     )
