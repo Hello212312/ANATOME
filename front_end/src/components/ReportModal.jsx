@@ -6,6 +6,7 @@ import "../css/ReportModal.css";
 import ReportButton from "./ReportButton";
 import CareGuide from "./CareGuide";
 import { displayAnatomyName } from "../utils/anatomyName";
+import { wakeBackend } from "../utils/wakeBackend";
 
 export default function ReportModal({
   setShowReport,
@@ -43,6 +44,8 @@ export default function ReportModal({
     const timer = setTimeout(async () => {
       setGuideState((current) => ({ ...current, status: "loading", error: "" }));
       try {
+        await wakeBackend();
+        if (controller.signal.aborted) return;
         const response = await fetch("/api/care-guide", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -97,6 +100,7 @@ export default function ReportModal({
       validateReport();
       setIsSaving(true);
 
+      await wakeBackend();
       const response = await fetch("/api/reports", {
         method: "POST",
         headers: {

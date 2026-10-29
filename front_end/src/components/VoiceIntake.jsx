@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import "./VoiceIntake.css";
+import { wakeBackend } from "../utils/wakeBackend";
 
 const SpeechRecognition =
   typeof window !== "undefined"
@@ -141,6 +142,7 @@ export default function VoiceIntake({ onFinish, onBack }) {
     setError("");
 
     try {
+      await wakeBackend();
       const response = await fetch("/api/revise-transcript", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
